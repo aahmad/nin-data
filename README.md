@@ -2,13 +2,47 @@
 
 This repository is a collection of data regarding releases and performances by Nine Inch Nails. We have designed a schema that we intend to be generally useful for music and music performance in general. 
 
-In this repository, you will find the data for the following:
+The dataset covers over 35 years of Nine Inch Nails — every release, every show, every credit:
 
-* Releases: The entire discography (singles, LPs, EPs, videos, Soundtracks, Film Scores, etc), contributors.
-* Tracks: Lyrics, versions, duration, bpm, covers, contributors.
-* Tours: Setlists, dates, countries, cities, venues, festivals.
+* **Discography** — 100+ releases across albums, EPs, singles, soundtracks, and film scores, with catalog numbers, release dates, and label history
+* **Tracks** — every song with duration, BPM, lyrics, alternate versions, and full personnel credits (composers, producers, engineers, mixers, remixers, musicians, and instruments)
+* **Cover songs** — every cover NIN has recorded or performed live, with original artist attribution
+* **Live history** — 1,000+ concerts spanning 1988 to present, with full setlists, venues, cities, countries, and festival appearances
+* **Contributors** — emain collaborators across the entire discography, queryable by role
 
-The schema diagram for the database can be [seen within this repository](https://github.com/aahmad/nin-data/blob/main/images/database.png). The database was designed using [PostgreSQL](https://www.postgresql.org). 
+The schema diagram for the database can be [seen within this repository](https://github.com/aahmad/nin-data/blob/main/images/database.png). The database was designed using [PostgreSQL](https://www.postgresql.org).
+
+## Download
+
+The dataset is available in two formats from the [latest release](https://github.com/aahmad/nin-data/releases/latest):
+
+| Format | Description |
+|--------|-------------|
+| `nin-YYYY-MM-DD.db` | SQLite — zero setup, works everywhere |
+| `nin-YYYY-MM-DD.sql` | PostgreSQL dump — full fidelity restore |
+
+## Getting Started
+
+### SQLite
+
+Download the `.db` file and query it immediately:
+
+```bash
+sqlite3 nin-YYYY-MM-DD.db
+
+sqlite> SELECT count(*) FROM concerts;
+sqlite> SELECT title, bpm FROM tracks ORDER BY bpm DESC LIMIT 5;
+```
+
+Works with any SQLite client: [DB Browser for SQLite](https://sqlitebrowser.org), Python/pandas, DuckDB, R, Excel, and more.
+
+### PostgreSQL
+
+```bash
+createdb nin
+psql nin < nin-YYYY-MM-DD.sql
+psql nin
+```
 
 ## Database Queries
 
@@ -301,6 +335,40 @@ ORDER BY
  melbourne        |           13
  dallas           |           13
  ...
+```
+
+### Instrumental Tracks
+
+Tracks with no lyrics, ordered by release date:
+
+```sql
+SELECT
+  t.title,
+  r.title AS release,
+  r.release_date
+FROM tracks t
+JOIN release_tracks rt ON rt.track_id = t.track_id
+JOIN releases r ON r.release_id = rt.release_id
+LEFT JOIN lyrics l ON l.track_id = t.track_id
+WHERE t.parent_id IS NULL
+  AND rt.main IS TRUE
+  AND (l.track_id IS NULL OR l.lyrics IS NULL OR l.lyrics = '')
+ORDER BY r.release_date ASC
+LIMIT 10;
+
+         title          |         release         | release_date
+------------------------+-------------------------+--------------
+ Help Me I Am In Hell   | Broken                  | 1992-09-22
+ Pinion                 | Broken                  | 1992-09-22
+ A Warm Place           | The Downward Spiral     | 1994-03-08
+ March Of The Fuckheads | Closer To God           | 1994-05-30
+ At The Heart Of It All | Further Down The Spiral | 1995-06-01
+ Driver Down            | Lost Highway            | 1997-02-18
+ Videodrones; Questions | Lost Highway            | 1997-02-18
+ The Frail              | The Fragile             | 1999-09-21
+ Just Like You Imagined | The Fragile             | 1999-09-21
+ Pilgrimage             | The Fragile             | 1999-09-21
+(10 rows)
 ```
 
 ## Database Schema
