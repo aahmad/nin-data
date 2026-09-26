@@ -2,13 +2,15 @@
 
 This repository is a collection of data regarding releases and performances by Nine Inch Nails. We have designed a schema that we intend to be generally useful for music and music performance in general. 
 
+This data powers [nindata.io](https://nindata.io) and [nintours.com](https://nintours.com).
+
 The dataset covers over 35 years of Nine Inch Nails — every release, every show, every credit:
 
 * **Discography** — 100+ releases across albums, EPs, singles, soundtracks, and film scores, with catalog numbers, release dates, and label history
 * **Tracks** — every song with duration, BPM, lyrics, alternate versions, and full personnel credits (composers, producers, engineers, mixers, remixers, musicians, and instruments)
 * **Cover songs** — every cover NIN has recorded or performed live, with original artist attribution
 * **Live history** — 1,000+ concerts spanning 1988 to present, with full setlists, venues, cities, countries, and festival appearances
-* **Contributors** — emain collaborators across the entire discography, queryable by role
+* **Contributors** — main collaborators across the entire discography, queryable by role
 
 The schema diagram for the database can be [seen within this repository](https://github.com/aahmad/nin-data/blob/main/images/database.png). The database was designed using [PostgreSQL](https://www.postgresql.org).
 
@@ -374,3 +376,15 @@ LIMIT 10;
 ## Database Schema
 
 The schema diagram for the database can be [seen within this repository](https://github.com/aahmad/nin-data/images/database.png).
+
+## Credits & Sources
+
+**Discography**: entered manually, referencing:
+- [Discogs](https://www.discogs.com/)
+- [nin.wiki](https://nin.wiki/)
+
+**Tours**: compiled with help from:
+- [setlist.fm](https://www.setlist.fm/)
+- [NIN Live](https://www.ninlive.com/)
+
+Thanks to the maintainers and contributors of these projects.
